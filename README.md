@@ -45,16 +45,12 @@ Brief description of your frontend application.
 
 ## Setup & Installation  
 * cd Frontend
+* cd my-react-app
 
 1. **Install Dependencies**
    * npm install
 
-2. **Setting up Environment Variables**
-
-If your project uses environment variables, include a `.env.example` file in your repository. Instruct users to copy this to `.env` and fill in the necessary variables.
-   * cp .env.example .env
-
-3. **Start the Development Server**
+2. **Start the Development Server**
    * npm start
 Your application should now be accessible at `http://localhost:3000/`
  
