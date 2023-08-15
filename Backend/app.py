@@ -38,13 +38,13 @@ class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-# Intermediate table for the "many to many" relationship between User and Organization
+
 user_organization_association = db.Table('user_organization',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
     db.Column('organization_id', db.Integer, db.ForeignKey('organizations.id'), primary_key=True)
 )
 
-# Add relationship to the model
+
 User.organizations = db.relationship('Organization', secondary=user_organization_association, backref=db.backref('users'))
 
 
@@ -57,7 +57,7 @@ def signup():
     hashed_password = generate_password_hash(data['password'], method='scrypt')
 
     print(hashed_password)
-    new_user = User(email=data['email'], password=hashed_password)  # Modified here
+    new_user = User(email=data['email'], password=hashed_password) 
     print(new_user)
     db.session.add(new_user)
     db.session.commit()
@@ -66,10 +66,10 @@ def signup():
 @app.route('/signin', methods=['POST'])
 def signin():
     data = request.get_json()
-    user = User.query.filter_by(email=data['email']).first()  # Modified here
+    user = User.query.filter_by(email=data['email']).first() 
     if not user or not check_password_hash(user.password, data['password']):
         return jsonify({"message": "Invalid credentials!"}), 401
-    access_token = create_access_token(identity=user.email)  # Use email as identity
+    access_token = create_access_token(identity=user.email) 
     return jsonify({"access_token": access_token})
 
 @app.route('/create-org', methods=['POST'])
@@ -132,6 +132,8 @@ def add_user_to_org():
 def protected_resource():
     current_user = get_jwt_identity()
     return jsonify(message=f"Hello, {current_user}! You have access to this protected resource.")
+
+
 
 if __name__ == '__main__':
     with app.app_context():

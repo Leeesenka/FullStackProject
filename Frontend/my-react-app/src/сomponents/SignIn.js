@@ -33,7 +33,7 @@ function SignIn() {
             setMessage("Successfully signed in!"); 
             setEmail("");
             setPassword("");
-            navigate("/organization"); 
+            navigate("/createorganization"); 
         } catch (error) {
             console.error("Error signing in:", error);
             setMessage("Error signing in. Please try again.");
@@ -65,14 +65,15 @@ function SignIn() {
                     Sign In
                 </Button>
 
-                {message && 
+               
+
+                <Link to="/signup">Don't have an account? Sign up</Link>
+            </div>
+            {message && 
                     <Typography variant="body1" color="error">
                         {message}
                     </Typography>
                 }
-
-                <Link to="/signup">Don't have an account? Sign up</Link>
-            </div>
         </Container>
     );
 }

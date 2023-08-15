@@ -66,14 +66,15 @@ function SignUp() {
                     Sign Up
                 </Button>
 
-                {message && 
+              
+
+                <Link to="/signin">Already have an account? Sign in</Link>
+            </div>
+            {message && 
                     <Typography variant="body1" color="error">
                         {message}
                     </Typography>
                 }
-
-                <Link to="/signin">Already have an account? Sign in</Link>
-            </div>
         </Container>
     );
 }
