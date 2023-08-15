@@ -50,18 +50,27 @@ User.organizations = db.relationship('Organization', secondary=user_organization
 
 
 migrate = Migrate(app, db)
+
 @app.route('/signup', methods=['POST'])
 def signup():
-    print('IN signup')
     data = request.get_json()
-    hashed_password = generate_password_hash(data['password'], method='scrypt')
+    
+    email = data.get('email')
+    if not email:
+        return jsonify({"message": "Email is required."}), 400
+    
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"message": "User with this email already exists!"}), 400
 
-    print(hashed_password)
-    new_user = User(email=data['email'], password=hashed_password) 
-    print(new_user)
+    hashed_password = generate_password_hash(data['password'], method='scrypt')
+    new_user = User(email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"message": "User created!"}), 201
+
+
+
 
 @app.route('/signin', methods=['POST'])
 def signin():
