@@ -32,5 +32,31 @@ Brief description of your project.
 6. **Start the Server**
    * python3 app.py
    * After this, your server should be accessible at `http://127.0.0.1:5000/`
+  
+   * 
+# Frontend 
+Brief description of your frontend application.
+
+## Prerequisites
+
+* Node.js & npm
+* React.js (or another framework/library you're using)
+* Web browser supported by your frontend stack
+
+## Setup & Installation  
+* cd Frontend
+
+1. **Install Dependencies**
+   * npm install
+
+2. **Setting up Environment Variables**
+
+If your project uses environment variables, include a `.env.example` file in your repository. Instruct users to copy this to `.env` and fill in the necessary variables.
+   * cp .env.example .env
+
+3. **Start the Development Server**
+   * npm start
+Your application should now be accessible at `http://localhost:3000/`
+ 
 
    
