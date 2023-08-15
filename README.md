@@ -21,7 +21,6 @@ Brief description of your project.
 3. **Install Dependencies**
    * pip install -r requirements.txt
 
-
 4. **Database Configuration**
 
 * Create a database in PostgreSQL
@@ -33,7 +32,7 @@ Brief description of your project.
    * python3 app.py
    * After this, your server should be accessible at `http://127.0.0.1:5000/`
   
-   * 
+    
 # Frontend 
 Brief description of your frontend application.
 
@@ -52,7 +51,7 @@ Brief description of your frontend application.
 
 2. **Start the Development Server**
    * npm start
-Your application should now be accessible at `http://localhost:3000/`
+   * Your application should now be accessible at `http://localhost:3000/`
  
 
    
