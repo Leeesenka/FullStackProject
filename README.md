@@ -13,13 +13,13 @@ Brief description of your project.
 ## Setup & Installation
 
 1. **Clone the Repository**
-   git clone https://github.com/Leeesenka/FullStackProject.git
-   cd Backend
+   * git clone https://github.com/Leeesenka/FullStackProject.git
+   * cd Backend
 2. **Setup the Virtual Environment**
-  python3 -m venv venv
-  source venv/bin/activate # On Windows: venv\Scripts\activate
+  * python3 -m venv venv
+  * source venv/bin/activate # On Windows: venv\Scripts\activate
 3. **Install Dependencies**
-   pip install -r requirements.txt
+   * pip install -r requirements.txt
 
 
 4. **Database Configuration**
@@ -30,7 +30,7 @@ Brief description of your project.
 5. **Run Migrations**
 
 6. **Start the Server**
-   python3 app.py
-   After this, your server should be accessible at `http://127.0.0.1:5000/`
+   * python3 app.py
+   * After this, your server should be accessible at `http://127.0.0.1:5000/`
 
    
