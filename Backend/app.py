@@ -9,6 +9,8 @@ from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from decouple import config
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 print(os.urandom(24).hex())
 
@@ -17,7 +19,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = config('SQLALCHEMY_DATABASE_URI')
 app.config['JWT_SECRET_KEY'] = config('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.debug = False
+app.debug = True
 
 
 db = SQLAlchemy(app)
@@ -53,23 +55,33 @@ migrate = Migrate(app, db)
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    data = request.get_json()
+    try:
+        print("In SignUP Func!")
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email:
+            return jsonify({"message": "Email is required."}), 400
+
+        if not password:
+            return jsonify({"message": "Password is required."}), 400
+        
+        existing_user = User.query.filter_by(email=email).first()
+        print(existing_user)
+        if existing_user:
+            return jsonify({"message": "User with this email already exists!"}), 400
+
+        hashed_password = generate_password_hash(password, method='scrypt')
+        new_user = User(email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "User created!"}), 201
     
-    email = data.get('email')
-    if not email:
-        return jsonify({"message": "Email is required."}), 400
-    
-    existing_user = User.query.filter_by(email=email).first()
-    if existing_user:
-        return jsonify({"message": "User with this email already exists!"}), 400
-
-    hashed_password = generate_password_hash(data['password'], method='scrypt')
-    new_user = User(email=email, password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({"message": "User created!"}), 201
-
-
+    except Exception as e:
+        app.logger.error(f"Exception occurred: {e}")
+        db.session.rollback()
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 500
 
 
 @app.route('/signin', methods=['POST'])
