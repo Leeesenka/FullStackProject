@@ -10,7 +10,10 @@ COPY . .
 WORKDIR /app/my-react-app
 
 RUN npm install
+RUN npm install -g serve
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build"]
+

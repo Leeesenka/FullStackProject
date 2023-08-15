@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
 from flask_migrate import Migrate
 from flask_cors import CORS
 from sqlalchemy.orm import relationship
@@ -12,7 +11,6 @@ from decouple import config
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-print(os.urandom(24).hex())
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -56,7 +54,6 @@ migrate = Migrate(app, db)
 @app.route('/signup', methods=['POST'])
 def signup():
     try:
-        print("In SignUP Func!")
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
@@ -68,7 +65,6 @@ def signup():
             return jsonify({"message": "Password is required."}), 400
         
         existing_user = User.query.filter_by(email=email).first()
-        print(existing_user)
         if existing_user:
             return jsonify({"message": "User with this email already exists!"}), 400
 
@@ -95,24 +91,33 @@ def signin():
 
 @app.route('/create-org', methods=['POST'])
 def new_organition():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    organization_name = data.get('name')
-    
-    if organization_name is None:
-        return jsonify({"message": "Organization name is required."}), 400
+        organization_name = data.get('name')
+        
+        if organization_name is None:
+            return jsonify({"message": "Organization name is required."}), 400
 
-   
-    existing_organization = Organization.query.filter_by(name=organization_name).first()
+        existing_organization = Organization.query.filter_by(name=organization_name).first()
 
-    if existing_organization:
-        return jsonify({"message": "An organization with this name already exists."}), 400
+        if existing_organization:
+            return jsonify({"message": "An organization with this name already exists."}), 400
 
-    new_organization = Organization(name=organization_name)
+        new_organization = Organization(name=organization_name)
 
-    db.session.add(new_organization)
-    db.session.commit()
-    return jsonify({"message": "Organization created!"}), 201
+        db.session.add(new_organization)
+        db.session.commit()
+
+        return jsonify({"message": "Organization created!"}), 201
+
+    except KeyError:
+     
+        return jsonify({"message": "Invalid data provided."}), 400
+    except Exception as e:
+       
+        app.logger.error(f"Error while creating organization: {e}")
+        return jsonify({"message": "Internal server error. Please try again later."}), 500
 
 
 @app.route('/show_users', methods=['GET'])
@@ -132,20 +137,34 @@ def show_organizations():
 
 @app.route('/add-user-to-org', methods=['POST'])
 def add_user_to_org():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    user = User.query.get(data['user_id'])
-    organization = Organization.query.filter_by(name=data['name']).first()
+        user_id = data.get('user_id')
+        organization_name = data.get('name')
 
-    if not user or not organization:
-        return jsonify({"error": "User or Organization not found"}), 404
+        if not user_id or not organization_name:
+            return jsonify({"error": "User ID and organization name are required"}), 400
 
-    if organization not in user.organizations:
-        user.organizations.append(organization)
-        db.session.commit()
-        return jsonify({"message": "Successfully added user to organization"}), 201
-    else:
-        return jsonify({"error": "User already added to this organization"}), 400
+        user = User.query.get(user_id)
+        organization = Organization.query.filter_by(name=organization_name).first()
+
+        if not user or not organization:
+            return jsonify({"error": "User or Organization not found"}), 404
+
+        if organization not in user.organizations:
+            user.organizations.append(organization)
+            db.session.commit()
+            return jsonify({"message": "Successfully added user to organization"}), 201
+        else:
+            return jsonify({"error": "User already added to this organization"}), 400
+
+    except KeyError:
+        return jsonify({"message": "Invalid data provided."}), 400
+    except Exception as e:
+      
+        app.logger.error(f"Error while adding user to organization: {e}")
+        return jsonify({"message": "Internal server error. Please try again later."}), 500
 
 
 @app.route('/protected-resource', methods=['GET'])
@@ -159,5 +178,5 @@ def protected_resource():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run()
+    app.run(debug=False, host='0.0.0.0')
     

@@ -49,7 +49,6 @@ function SignUp() {
 
     return (
         <Container maxWidth="sm">
-            
             <h1>SignUp</h1>
             <div className='aut'>
                 <TextField
@@ -72,19 +71,16 @@ function SignUp() {
                 <Button variant="contained" color="primary" onClick={handleSignUp}>
                     Sign Up
                 </Button>
-
-              
-
                 <Link to="/signin">Already have an account? Sign in</Link>
             </div>
             {message && 
-                    <Typography variant="body1" color="error">
-                        {message}
-                    </Typography>
-                }
+                <Typography variant="body1" color="error">
+                    {message}
+                </Typography>
+            }
         </Container>
-        
     );
+    
 }
 
 export default SignUp;

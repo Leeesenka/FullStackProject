@@ -4,9 +4,6 @@ import {Button, Select, MenuItem, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 
-
-
-
 function Organization() {
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
@@ -54,6 +51,8 @@ function Organization() {
                 name: selectedOrganization, 
                 user_id: selectedUserId 
             });
+            setSelectedUserId('');
+            setSelectedOrganization('');
             setMessage("Successfully added user to organization!"); 
         } catch (error) {
             console.error("Error adding user to organization:", error);
@@ -66,23 +65,27 @@ function Organization() {
         }
     };
     useEffect(() => {
-        
-        const headers = {
-            Authorization: `Bearer ${localStorage.getItem('token')}` 
-        };
-
-        axios.get("http://127.0.0.1:5000/protected-resource", { headers })
-        .then(response => {
-            console.log("Response from server:", response.data);
-            setServerResponse(response.data.message);  
-            setIsUserAuthenticated(true);
-            setUserEmail(response.data.email); 
-        })
-            .catch(error => {
-                console.error("Error checking authentication:", error);
+        const fetchData = async () => {
+            const headers = {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            };
+            
+            try {
+                const response = await axios.get("http://127.0.0.1:5000/protected-resource", { headers });
+                console.log("Response from server:", response.data);
+                setServerResponse(response.data.message);  
+                setIsUserAuthenticated(true);
+                setUserEmail(response.data.email);
+            } catch (error) {
+                if (error.response && error.response.status !== 401) {
+                    console.error("Error checking authentication:", error);
+                }
                 setIsUserAuthenticated(false);
-            });
-    }, []); 
+            }
+        };
+    
+        fetchData();
+    }, []);
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -94,19 +97,19 @@ function Organization() {
    
     return (
         <Container maxWidth="sm">
-                    <div className='serverResponse'>
-               {serverResponse && 
-        <Typography variant="body1">
-            {serverResponse}
-        </Typography>
-    }
-     {isUserAuthenticated && 
-                <Button variant="contained" color="secondary" onClick={logout} id='logout'>
-                    Logout
-                </Button>
-            }
-    </div>
-           <h1 id='neworg'>Add Users in Organization</h1>
+            <div className='serverResponse'>
+                {serverResponse && 
+                    <Typography variant="body1">
+                        {serverResponse}
+                    </Typography>
+                }
+                {isUserAuthenticated && 
+                    <Button variant="contained" color="secondary" onClick={logout} id='logout'>
+                        Logout
+                    </Button>
+                }
+            </div>
+            <h1 id='neworg'>Add Users in Organization</h1>
             <div className='add'>
                 <Select
                     value={selectedUserId}
@@ -119,60 +122,58 @@ function Organization() {
                         <MenuItem key={user.id} value={user.id}>{user.email}</MenuItem>
                     )}
                 </Select>
-
+    
                 <Select
-                  open={openSelect}
-                  onOpen={() => setOpenSelect(true)}
-                  onClose={() => setOpenSelect(false)}
-                  value={selectedOrganization}
-                  onFocus={handleAllOrganization}
-                  onChange={(e) => setSelectedOrganization(e.target.value)}
-                  displayEmpty
-                  renderValue={(selectedValue) => {
-                    if (!selectedValue) {
-                        return "Select an organization";
-                    }
-                    return selectedValue;}}
+                    open={openSelect}
+                    onOpen={() => setOpenSelect(true)}
+                    onClose={() => setOpenSelect(false)}
+                    value={selectedOrganization}
+                    onFocus={handleAllOrganization}
+                    onChange={(e) => setSelectedOrganization(e.target.value)}
+                    displayEmpty
+                    renderValue={(selectedValue) => {
+                        if (!selectedValue) {
+                            return "Select an organization";
+                        }
+                        return selectedValue;
+                    }}
                 >
                     <MenuItem value="" disabled>Select an organization</MenuItem>
                     {organizations.map((organization, index) => 
                         <MenuItem key={index} value={organization.name}>{organization.name}</MenuItem>
                     )}
                 </Select>
-
-
+    
                 <Button variant="contained" color="primary" onClick={handleOrganizationUser} disabled={!isUserAuthenticated}>
                     Add User to Organization
                 </Button>
+                
                 {!isUserAuthenticated && 
                     <Typography variant="body2" color="textSecondary" style={{marginLeft: '10px'}}>
                         You should be logged in to perform the action
                     </Typography>
                 }
-
             </div>
-          
-        {selectedUserId && selectedOrganization && 
-            <Typography variant="body1" style={{marginTop: '20px'}}>
-                Selected User: {users.find(user => user.id === selectedUserId)?.email}
-            </Typography>
-        }
-        {selectedOrganization && 
-            <Typography variant="body1" style={{marginTop: '10px'}}>
-                Selected Organization: {selectedOrganization}
-            </Typography>
-        }
-
-
+    
+            {selectedUserId && selectedOrganization && 
+                <Typography variant="body1" style={{marginTop: '20px'}}>
+                    Selected User: {users.find(user => user.id === selectedUserId)?.email}
+                </Typography>
+            }
+            {selectedOrganization && 
+                <Typography variant="body1" style={{marginTop: '10px'}}>
+                    Selected Organization: {selectedOrganization}
+                </Typography>
+            }
+    
             {message && 
                 <Typography variant="body1" color="error">
                     {message}
                 </Typography>
             }
-          
-
         </Container>
     );
+    
 }
 
 export default Organization;

@@ -42,7 +42,7 @@ function SignIn() {
     
     return (
         <Container maxWidth="sm">
-               <h1>SignIn</h1>
+            <h1>SignIn</h1>
             <div className='aut'>
                 <TextField
                     label="Email"
@@ -64,18 +64,16 @@ function SignIn() {
                 <Button variant="contained" color="primary" onClick={handleSignIn}>
                     Sign In
                 </Button>
-
-               
-
                 <Link to="/signup">Don't have an account? Sign up</Link>
             </div>
             {message && 
-                    <Typography variant="body1" color="error">
-                        {message}
-                    </Typography>
-                }
+                <Typography variant="body1" color="error">
+                    {message}
+                </Typography>
+            }
         </Container>
     );
+    
 }
 
 export default SignIn;
