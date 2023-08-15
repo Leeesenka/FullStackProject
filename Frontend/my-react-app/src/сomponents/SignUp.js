@@ -38,10 +38,10 @@ function SignUp() {
             console.error("Error signing up:", error);
             
           
-            if (error.response && error.response.data && error.response.data.message) {
+            if (error.response && error.response.data.message === "User with this email already exists!") {
                 setMessage(error.response.data.message);
             } else {
-                setMessage("User with this email already exists!");
+                setMessage("Error signing up. Please try again.");
             }
         }
     };
