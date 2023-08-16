@@ -8,14 +8,14 @@ This project consists of three main components:
 
 The project utilizes Docker for containerization.
  
-#Prerequisites
+## Prerequisites
 
 * Docker
 * Docker Compose 
 
-## Setup
+# Setup
 
-# Environment Variables
+## Environment Variables
 
 Before you run the Docker Compose setup, you need to configure the necessary environment variables. You can do this by creating a .env file in the root directory of the project with the following content:
 
@@ -27,7 +27,7 @@ JWT_SECRET_KEY=your_jwt_secret_key
 Replace the placeholders (your_postgres_user, your_postgres_password, your_postgres_database_name, and your_jwt_secret_key) with your actual values.
 
 
-# Building and Running the Containers
+## Building and Running the Containers
 
 With the .env file in place, navigate to the root directory of the project in the terminal and run the following command:
 
@@ -39,14 +39,14 @@ This command will build and run all three containers. Once the containers are ru
 * The Frontend will be available at: http://localhost:3000/
 * PostgreSQL will be exposed on the default port 5432.
 
-# Stopping the Containers
+## Stopping the Containers
 To stop the running containers, press CTRL+C in the terminal.
 
 To stop and remove all the containers, you can use the following command:
 
 docker-compose down
 
-## Development
+# Development
 
 If you make any changes to the Backend or Frontend and want to see those changes reflected in the running application, you will need to rebuild the Docker images. This can be done using the docker-compose up --build command.
 
