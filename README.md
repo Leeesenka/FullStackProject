@@ -19,10 +19,10 @@ The project utilizes Docker for containerization.
 
 Before you run the Docker Compose setup, you need to configure the necessary environment variables. You can do this by creating a .env file in the root directory of the project with the following content:
 
-`POSTGRES_USER=your_postgres_user`
-`POSTGRES_PASSWORD=your_postgres_password`
-`POSTGRES_DB=your_postgres_database_name`
-`JWT_SECRET_KEY=your_jwt_secret_key`
+* `POSTGRES_USER=your_postgres_user`
+* `POSTGRES_PASSWORD=your_postgres_password`
+* `POSTGRES_DB=your_postgres_database_name`
+* `JWT_SECRET_KEY=your_jwt_secret_key`
 
 Replace the placeholders (your_postgres_user, your_postgres_password, your_postgres_database_name, and your_jwt_secret_key) with your actual values.
 
